@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using NZWalks.Api.Models.Domains;
 using NZWalks.Api.Repositories;
-using System.Collections.Generic;
 
 namespace NZWalks.Api.Controllers
 {
@@ -13,16 +11,16 @@ namespace NZWalks.Api.Controllers
         private readonly IRegionRepository _RegionRepository;
         private readonly IMapper _Mapper;
 
-        public RegionsController(IRegionRepository regionRepository,IMapper mapper)
+        public RegionsController(IRegionRepository regionRepository, IMapper mapper)
         {
             this._RegionRepository = regionRepository;
             this._Mapper = mapper;
         }
 
         [HttpGet]
-        public IActionResult GetAllRegions()
+        public async Task<IActionResult> GetAllRegionsAsync()
         {
-            var regions= _RegionRepository.GetAll();
+            var regions = _RegionRepository.GetAllAsync();
 
             //USING DTO TO ABSTRACT DATA TO OUTSIDE WORLD.
             //var RegionDTO = new List<Models.DTO.Regions>();
@@ -38,10 +36,10 @@ namespace NZWalks.Api.Controllers
             //    };
             //    RegionDTO.Add(regionDTO);
             //}
-            var RegionDTO=_Mapper.Map<List<Models.DTO.Regions>>(regions);
+            var RegionDTO = _Mapper.Map<List<Models.DTO.Regions>>(regions);
 
 
-            return Ok(RegionDTO);
+            return  Ok(RegionDTO);
         }
 
         //public void GetById()

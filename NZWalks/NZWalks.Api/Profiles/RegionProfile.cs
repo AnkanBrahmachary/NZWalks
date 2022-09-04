@@ -2,7 +2,7 @@
 
 namespace NZWalks.Api.Profiles
 {
-    public class RegionProfile:Profile
+    public class RegionProfile : Profile
     {
         public RegionProfile()
         {
