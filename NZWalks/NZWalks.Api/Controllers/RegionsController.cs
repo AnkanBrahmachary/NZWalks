@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using NZWalks.Api.Models.Domains;
 using NZWalks.Api.Repositories;
 
 namespace NZWalks.Api.Controllers
@@ -41,10 +42,12 @@ namespace NZWalks.Api.Controllers
 
             return  Ok(RegionDTO);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetRegionAsync(Guid id)
+        {
+           var region=_RegionRepository.GetAsync(id);
 
-        //public void GetById()
-        //{
-
-        //}
+            return Ok(region);
+        }
     }
 }
