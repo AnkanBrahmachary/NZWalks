@@ -12,6 +12,16 @@ namespace NZWalks.Api.Repositories
         {
             this._NZwalksDbcontext = nZWalksDbcontext;
         }
+
+        public async Task<Region> AddAsync(Region region)
+        {
+            region.Id = new Guid();
+            await _NZwalksDbcontext.AddAsync(region);
+            await _NZwalksDbcontext.SaveChangesAsync();
+
+            return region;
+        }
+
         //use aync keyword to make code asynchronous
         public async Task<IEnumerable<Region>> GetAllAsync()
         {

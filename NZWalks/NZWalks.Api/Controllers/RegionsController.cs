@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.Api.Models.Domains;
+using NZWalks.Api.Models.DTO;
 using NZWalks.Api.Repositories;
 
 namespace NZWalks.Api.Controllers
@@ -21,7 +22,7 @@ namespace NZWalks.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllRegionsAsync()
         {
-            var regions = _RegionRepository.GetAllAsync();
+            var regions = await _RegionRepository.GetAllAsync();
 
             //USING DTO TO ABSTRACT DATA TO OUTSIDE WORLD.
             //var RegionDTO = new List<Models.DTO.Regions>();
@@ -42,12 +43,63 @@ namespace NZWalks.Api.Controllers
 
             return  Ok(RegionDTO);
         }
+        
+        
         [HttpGet]
+        [Route("{id:guid}")]
+        [ActionName("GetRegionAsync")]
         public async Task<IActionResult> GetRegionAsync(Guid id)
         {
-           var region=_RegionRepository.GetAsync(id);
+            var region = await _RegionRepository.GetAsync(id);
 
-            return Ok(region);
+            //test1
+
+
+            if (region==null)
+            {
+                return NotFound();
+            }
+            
+            var regionDto = _Mapper.Map<Models.DTO.Regions>(region);
+            return Ok(regionDto);
+            
+            
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRegionAsync(AddRegionRequest addRegionRequest)
+        {
+            //convert request(DTO) to domain
+
+            var region = new Region()
+            {
+                Area = addRegionRequest.Area,
+                Code = addRegionRequest.Code,
+                Name = addRegionRequest.Name,
+                Latitude = addRegionRequest.Latitude,
+                Longitude = addRegionRequest.Longitude,
+                Population = addRegionRequest.Population
+            };
+
+            //pass details to repository
+            var newregion = await _RegionRepository.AddAsync(region);
+
+            // convert back to DTO
+            var regionDTO = new Regions()
+            {
+                Id = newregion.Id,
+                Area = newregion.Area,
+                Name = newregion.Name,
+                Code = newregion.Code,
+                Latitude = newregion.Latitude,
+                Longitude = newregion.Longitude,
+                Population = newregion.Population
+
+            };
+
+            return await GetRegionAsync(regionDTO.Id);
+
+        }
+
     }
 }
